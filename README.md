@@ -29,6 +29,62 @@ This project is a simple quotation pricing API built with Laravel 12 (back-end) 
 
 ---
 
+## Getting Started
+
+Follow the steps below to spin up the project locally:
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/lolade-global/airo.git
+cd airo
+```
+
+### 2. Install Backend Dependencies
+
+```bash
+composer install
+```
+
+### 3. Copy `.env` and Generate App Key
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Configure Database
+
+Edit your `.env` file:
+
+```
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+FIXED_RATE=3
+```
+
+Then run:
+
+```bash
+php artisan migrate
+```
+
+### 5. Install JWT Auth Package
+
+php artisan jwt:secret
+
+### 6. Serve the App
+
+```bash
+php artisan serve
+```
+
+Then Register via `http://localhost:8000/register.html` or Login via `http://localhost:8000/index.html`
+
+---
+
 ## API Endpoints
 
 ### Auth Routes
@@ -292,55 +348,3 @@ This makes the project easy to extend (e.g., adding more quote rules, new resour
 Currently all request are persisted but we could make it idempotent depending on the objective of the app. We could avoid duplicate records and return the existing quotation for the same sets of inputs.
 
 ---
-
-## Getting Started
-
-Follow the steps below to spin up the project locally:
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repo-url>
-cd your-project-folder
-```
-
-### 2. Install Backend Dependencies
-
-```bash
-composer install
-```
-
-### 3. Copy `.env` and Generate App Key
-
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-
-### 4. Configure Database
-
-Edit your `.env` file:
-
-```
-DB_DATABASE=your_database
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-
-FIXED_RATE=3
-```
-
-Then run:
-
-```bash
-php artisan migrate
-```
-
-### 5. Install JWT Auth Package
-
-php artisan jwt:secret
-
-### 6. Serve the App
-
-```bash
-php artisan serve
-```
