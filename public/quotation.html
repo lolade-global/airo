@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quotation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="logoutBtn" style="margin-top: 20px;">Logout</button>
+    <h2>Get Quotation</h2>
+    <form id="quoteForm">
+        <input type="text" id="age" placeholder="Comma-separated ages (e.g. 28,35)" required /><br>
+        <select id="currency" required>
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+        <option value="GBP">GBP</option>
+        </select><br>
+        <input type="date" id="start" required /><br>
+        <input type="date" id="end" required /><br>
+        <button type="submit">Get Quote</button>
+    </form>
+
+    <h3>Quotation Result</h3>
+    <table id="quoteTable" border="1" cellpadding="8" style="margin-top: 10px; display: none;">
+    <thead>
+        <tr>
+        <th>Quotation ID</th>
+        <th>Total</th>
+        <th>Currency</th>
+        </tr>
+    </thead>
+    <tbody id="quoteTableBody"></tbody>
+    </table>
+
+    <p id="quoteMessage"></p>
+
+    <script src="script.js"></script>
+</body>
+</html>
