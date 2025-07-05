@@ -337,11 +337,7 @@ php artisan migrate
 
 ### 5. Install JWT Auth Package
 
-```bash
-composer require php-open-source-saver/jwt-auth
-php artisan vendor:publish --provider="PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider"
 php artisan jwt:secret
-```
 
 ### 6. Serve the App
 
