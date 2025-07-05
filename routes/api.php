@@ -9,9 +9,5 @@ Route::group([ 'middleware' => 'api' ], function () {
         Route::post('/register', [AuthController::class, 'register'])->name('register');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
     });
-
-    Route::middleware('auth:api')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-        Route::post('/quotation', [QuotationController::class, 'generateQuotation'])->name('quotation.generate');
-    });
+    Route::post('/quotation', [QuotationController::class, 'generateQuotation'])->middleware('auth:api')->name('quotation.generate');
 });

@@ -1,61 +1,350 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Quotation API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project is a simple quotation pricing API built with Laravel 12 (back-end) and vanilla JS (front-end). It implements **JWT authentication**, calculates quotations based on age and trip duration, and ensures clean RESTful response standards.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **JWT Authentication** (Register/Login)
+- **Quotation logic via Service Layer**
+- **Data persistence** with Eloquent models
+- **Request validation** with FormRequest
+- **API Resource responses**
+- **Unit test coverage**
+- **REST-compliant structure**
+- **Protected endpoints**
+- **Swagger (OpenAPI) Documentation**
+- Simple front-end with toast alerts and session handling
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Laravel 12**
+- **JWT Auth** (php-open-source-saver/jwt-auth)
+- **MySQL**
+- **HTML + JS Frontend**
+- **Postman / Swagger for API testing**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## API Endpoints
 
-## Laravel Sponsors
+### Auth Routes
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+ Method  Endpoint              Description
+ POST    /api/auth/register    User Registration
+ POST    /api/auth/login       Login & get token
 
-### Premium Partners
+### Quotation Route
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+ Method  Endpoint              Description
+ POST    /api/quotation   Generate a quotation *(Protected)*
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Quotation Logic
 
-## Code of Conduct
+- Fixed Rate: **€3.00/day**
+- Age Loadings:
+  - 18–30: 0.6x
+  - 31–40: 0.7x
+  - 41–50: 0.8x
+  - 51–60: 0.9x
+  - 61–70: 1.0x
+- Total = `fixed_rate * age_load * number_of_days`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Assumptions
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- All ages are provided as a comma-separated string of integers.
+- `currency_id` supports only ISO 4217 values: `"EUR"`, `"GBP"`, or `"USD"`.
+- Dates must follow ISO 8601 format: `YYYY-MM-DD`. (Laravel date format by default)
+- Trip must be at least 1 day and end date should be greater than start date.
+- The token must be included in the `Authorization: Bearer <token>` header for protected endpoints.
+- User inputs are persisted in a DB
+- The app was built with room for scalability, reusability and it's modular
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Running Tests
+
+```bash
+php artisan test
+```
+
+Covers:
+
+- Happy path calculations
+- Age group boundaries
+- Invalid age exceptions
+
+---
+
+## Sample Request
+
+**POST** `/api/quotation`
+
+```json
+{
+  "age": "28,35",
+  "currency_id": "EUR",
+  "start_date": "2020-10-01",
+  "end_date": "2020-10-30"
+}
+```
+
+### Response
+
+```json
+{
+  "message": "quotation fetched successfully",
+  "data": {
+    "quotation_id": 10,
+    "total": "198.00",
+    "currency_id": "EUR"
+  }
+}
+```
+
+---
+
+## Swagger Doc
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Quotation API
+  version: 1.0.0
+  description: API to calculate airo quotations
+servers:
+  - url: http://localhost:8000/api
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+        '422':
+          description: Validation error
+
+  /auth/login:
+    post:
+      summary: Authenticate and receive JWT
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: yourpassword
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Unauthorized
+  /quotation:
+    post:
+      tags:
+        - Quotation
+      summary: Generate a new quotation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [age, currency_id, start_date, end_date]
+              properties:
+                age:
+                  type: string
+                  example: "28,35"
+                currency_id:
+                  type: string
+                  enum: [EUR, USD, GBP]
+                  example: "EUR"
+                start_date:
+                  type: string
+                  format: date
+                  example: "2020-10-01"
+                end_date:
+                  type: string
+                  format: date
+                  example: "2020-10-30"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      quotation_id:
+                        type: integer
+                      total:
+                        type: string
+                      currency_id:
+                        type: string
+        '401':
+          description: Unauthorized
+        '422':
+          description: Validation error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+```
+
+---
+
+## Frontend Usage
+
+Assuming you served the application on port 8000:
+
+- Login via `http://localhost:8000/index.html` or Register via `http://localhost:8000/register.html`
+- Token stored in `localStorage`
+- Protected quotation form at `http://localhost:8000/quotation.html`
+- Toasts for success/errors
+- Auto-redirect if token is missing or expired
+
+---
+
+## DB Schema
+
+```sql
+CREATE TABLE quotations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  age VARCHAR(255),
+  currency_id VARCHAR(10),
+  start_date DATE,
+  end_date DATE,
+  total DECIMAL(10, 2),
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+```
+
+---
+
+## My Approach
+
+Althouth this is a simple task that could be completed in one or two method, I took a modular and scalable approach to building this application by separating concerns and ensuring reusability, I love to use technologies/stack the way they are intended for efficiency:
+
+- **Service Layer Pattern**: Business logic is encapsulated in a `QuotationService`, making the code more testable and clean.
+- **Form Request Validation**: Used Laravel’s FormRequest classes to validate incoming data before processing.
+- **API Resource**: Structured response with a `QuotationResource` to ensure consistent JSON output format.
+- **JWT Authentication**: Implemented using `php-open-source-saver/jwt-auth` to secure endpoints and authorized access.
+- **Frontend**: Plain HTML and JavaScript with `fetch` for API calls, `localStorage` for token management, and toast notifications.
+- **Edge Case Handling**: Proper error messages and validation for age groups, trip length, and currency support.
+- **RESTful Compliance**: Endpoints follow REST standards including status codes, naming, and structure.
+- I saved the fixed rates and age group in config/quotation.php for abstraction and can be changed without making changes to logic. Fixed rates can be changed with a simple env update.
+
+This makes the project easy to extend (e.g., adding more quote rules, new resources).
+
+### Improvements
+
+Currently all request are persisted but we could make it idempotent depending on the objective of the app. We could avoid duplicate records and return the existing quotation for the same sets of inputs.
+
+---
+
+## Getting Started
+
+Follow the steps below to spin up the project locally:
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repo-url>
+cd your-project-folder
+```
+
+### 2. Install Backend Dependencies
+
+```bash
+composer install
+```
+
+### 3. Copy `.env` and Generate App Key
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Configure Database
+
+Edit your `.env` file:
+
+```
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+FIXED_RATE=3
+```
+
+Then run:
+
+```bash
+php artisan migrate
+```
+
+### 5. Install JWT Auth Package
+
+```bash
+composer require php-open-source-saver/jwt-auth
+php artisan vendor:publish --provider="PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider"
+php artisan jwt:secret
+```
+
+### 6. Serve the App
+
+```bash
+php artisan serve
+```
