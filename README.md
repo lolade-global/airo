@@ -90,14 +90,14 @@ Then Register via `http://localhost:8000/register.html` or Login via `http://loc
 
 ### Auth Routes
 
- Method  Endpoint              Description
- POST    /api/auth/register    User Registration
- POST    /api/auth/login       Login & get token
+ - Method  Endpoint              Description
+ - POST    /api/auth/register    User Registration
+ - POST    /api/auth/login       Login & get token
 
 ### Quotation Route
 
- Method  Endpoint              Description
- POST    /api/quotation   Generate a quotation *(Protected)*
+ - Method  Endpoint              Description
+ - POST    /api/quotation   Generate a quotation *(Protected)*
 
 ---
 
