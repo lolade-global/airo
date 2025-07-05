@@ -72,8 +72,9 @@ php artisan migrate
 ```
 
 ### 5. Install JWT Auth Package
-
+```bash
 php artisan jwt:secret
+```
 
 ### 6. Serve the App
 
