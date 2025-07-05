@@ -55,7 +55,7 @@ php artisan key:generate
 
 ### 4. Configure Database
 
-Edit your `.env` file:
+Create a mysql DB and edit your `.env` file accordingly:
 
 ```
 DB_DATABASE=your_database
@@ -75,6 +75,7 @@ php artisan migrate
 ```bash
 php artisan jwt:secret
 ```
+You will get a prompt saying it will override existing secret, type `yes`
 
 ### 6. Serve the App
 
