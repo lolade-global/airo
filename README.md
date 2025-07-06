@@ -335,18 +335,21 @@ CREATE TABLE quotations (
 Althouth this is a simple task that could be completed in one or two method, I took a modular and scalable approach to building this application by separating concerns and ensuring reusability, I love to use technologies/stack the way they are intended for efficiency:
 
 - **Service Layer Pattern**: Business logic is encapsulated in a `QuotationService`, making the code more testable and clean.
-- **Form Request Validation**: Used Laravel’s FormRequest classes to validate incoming data before processing.
-- **API Resource**: Structured response with a `QuotationResource` to ensure consistent JSON output format.
-- **JWT Authentication**: Implemented using `php-open-source-saver/jwt-auth` to secure endpoints and authorized access.
+- **Form Request Validation**: I used Laravel’s FormRequest classes to validate incoming data before processing.
+- **API Resource**: I structured the response with a `QuotationResource` to ensure consistent JSON output format.
+- **JWT Authentication**: I implemented using `php-open-source-saver/jwt-auth` to secure endpoints.
 - **Frontend**: Plain HTML and JavaScript with `fetch` for API calls, `localStorage` for token management, and toast notifications.
 - **Edge Case Handling**: Proper error messages and validation for age groups, trip length, and currency support.
 - **RESTful Compliance**: Endpoints follow REST standards including status codes, naming, and structure.
-- I saved the fixed rates and age group in config/quotation.php for abstraction and can be changed without making changes to logic. Fixed rates can be changed with a simple env update.
+- **Config**: I saved the fixed rates and age group in `config/quotation.php` for abstraction and can be changed without making changes to logic. Fixed rates can be changed with a simple env update.
 
 This makes the project easy to extend (e.g., adding more quote rules, new resources).
 
 ### Improvements
 
-Currently all request are persisted but we could make it idempotent depending on the objective of the app. We could avoid duplicate records and return the existing quotation for the same sets of inputs.
+- I would add logs if this was a bigger app for easier troubleshooting
+- Currently all request are persisted but we could make it idempotent depending on the objective of the app. We could avoid duplicate records and return the existing quotation for the same sets of inputs.
+- I can dockerize the app to simplify environment setup.
+- If there was a get endpoint, I'd go for uuid instead of auto_increment id for the quotation_id (To prevent hackers from accessing the next quotation by increasing the id)
 
 ---
