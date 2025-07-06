@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\EnforceJsonHeader;
 use App\Http\Controllers\QuotationController;
 
 Route::group([ 'middleware' => 'api' ], function () {
@@ -9,5 +10,5 @@ Route::group([ 'middleware' => 'api' ], function () {
         Route::post('/register', [AuthController::class, 'register'])->name('register');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
     });
-    Route::post('/quotation', [QuotationController::class, 'generateQuotation'])->middleware('auth:api')->name('quotation.generate');
+    Route::post('/quotation', [QuotationController::class, 'generateQuotation'])->middleware(['auth:api', EnforceJsonHeader::class])->name('quotation.generate');
 });

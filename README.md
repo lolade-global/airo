@@ -1,6 +1,6 @@
 # Quotation API
 
-This project is a simple quotation pricing API built with Laravel 12 (back-end) and vanilla JS (front-end). It implements **JWT authentication**, calculates quotations based on age and trip duration, and ensures clean RESTful response standards.
+This project is a simple quotation pricing API built with Laravel 12 (back-end) and vanilla JS (front-end). It implements JWT authentication, calculates quotations based on age and trip duration, and ensures clean RESTful response standards.
 
 ---
 
@@ -104,7 +104,7 @@ Then Register via `http://localhost:8000/register.html` or Login via `http://loc
 
 ## Quotation Logic
 
-- Fixed Rate: **€3.00/day**
+- Fixed Rate: **3.00/day**
 - Age Loadings:
   - 18–30: 0.6x
   - 31–40: 0.7x
@@ -287,6 +287,8 @@ paths:
                         type: string
         '401':
           description: Unauthorized
+        '415':
+          description: Unsupported Media Type
         '422':
           description: Validation error
 
@@ -342,6 +344,7 @@ Althouth this is a simple task that could be completed in one or two method, I t
 - **Edge Case Handling**: Proper error messages and validation for age groups, trip length, and currency support.
 - **RESTful Compliance**: Endpoints follow REST standards including status codes, naming, and structure.
 - **Config**: I saved the fixed rates and age group in `config/quotation.php` for abstraction and can be changed without making changes to logic. Fixed rates can be changed with a simple env update.
+- **Enforce Content-Type Header**: I created a middleware `EnforceJsonHeader` which returns a `415 Unsupported Media Type` error if the Content-Type is not set to application/json. Laravel by default treats such request as a web request and returns 200 but redirects to homepage
 
 This makes the project easy to extend (e.g., adding more quote rules, new resources).
 
